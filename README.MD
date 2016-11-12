@@ -7,12 +7,11 @@
 
  _过保护的功能只在Win7sp1 x64 上运行，有几处代码稍微补下现在也是可以用的 (config.h中开启)_ 
 
-![输入图片说明](http://git.oschina.net/uploads/images/2016/1112/150338_0fc41eef_632350.png "在这里输入图片标题")
+![输入图片说明](http://git.oschina.net/uploads/images/2016/1112/183152_cd0b9f9b_632350.png "在这里输入图片标题")
 
-![输入图片说明](http://git.oschina.net/uploads/images/2016/1112/150352_87ea9ec1_632350.png "在这里输入图片标题")
+![输入图片说明](http://git.oschina.net/uploads/images/2016/1112/183158_10dda016_632350.png "在这里输入图片标题")
 
-![输入图片说明](http://git.oschina.net/uploads/images/2016/1112/150357_3ecd89ca_632350.png "在这里输入图片标题")
-
+![输入图片说明](http://git.oschina.net/uploads/images/2016/1112/183203_79370978_632350.png "在这里输入图片标题")
 
 
 除了界面内的操作，其他的快捷键分别是：
