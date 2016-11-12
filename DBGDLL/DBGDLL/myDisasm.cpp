@@ -1,10 +1,10 @@
-//·´»ã±àÏà¹Ø
+//åæ±‡ç¼–ç›¸å…³
 #include "stdafx.h"
 #include "myDiasm.h"
 #include "breakpoint.h"
 
 /************************************************************************/
-/* HexEdit¶¨Î»
+/* HexEditå®šä½
 /************************************************************************/
 VOID GotoHexEdit( DWORD addr )
 {
@@ -18,16 +18,16 @@ VOID GotoHexEdit( DWORD addr )
 	item.iItem = 0;
 	item.pszText = buf;
 
-	//À­µ½Ö¸¶¨µÄÎ»ÖÃ
+	//æ‹‰åˆ°æŒ‡å®šçš„ä½ç½®
 	DWORD addr_moveto = addr - (addr % 0x10);
 	int imoved = 0;
 
-	//´ÓÍ·²¿µ½Î²²¿¹²0x1000
+	//ä»å¤´éƒ¨åˆ°å°¾éƒ¨å…±0x1000
 	DWORD addr_head = addr - (addr % 0x1000);
 	int icount = 0;
 	for(int i = 0; i <= 0xFF0; i += 0x10)
 	{
-		//ÏÈ²åÈëĞĞ
+		//å…ˆæ’å…¥è¡Œ
 		item.iItem = icount;
 		wsprintfA( buf, "%08X", addr_head + i );
 		ListView_InsertItem( HexEditWnd, &item );
@@ -37,14 +37,14 @@ VOID GotoHexEdit( DWORD addr )
 			imoved = icount;
 		}
 
-		//ÉèÖÃ0x10¸öÊı¾İ
+		//è®¾ç½®0x10ä¸ªæ•°æ®
 		for(int i2 = 0; i2 <= 0xF; i2++)
 		{
 			wsprintfA( buf, "%02X", GETPB( addr_head + i + i2 ) );
 			ListView_SetItemText( HexEditWnd, icount, i2 + 1, buf );
 		}
 
-		//²åÈëasciiÂë
+		//æ’å…¥asciiç 
 		char tmp[30] = {0};
 		for(int i3 = 0; i3<0x10; i3++)
 		{
@@ -59,9 +59,9 @@ VOID GotoHexEdit( DWORD addr )
 	}
 
 
-	//À­µ½Ö¸¶¨µÄÎ»ÖÃ
+	//æ‹‰åˆ°æŒ‡å®šçš„ä½ç½®
 	if(imoved > 0XC)
-		ListView_EnsureVisible( HexEditWnd, imoved + 0xC, TRUE );	//ÍùÏÂÀ­µã °Ñµ±Ç°µÄaddrÖÃ¶¥
+		ListView_EnsureVisible( HexEditWnd, imoved + 0xC, TRUE );	//å¾€ä¸‹æ‹‰ç‚¹ æŠŠå½“å‰çš„addrç½®é¡¶
 	ListView_SetItemState( HexEditWnd, imoved, LVIS_SELECTED, LVIS_SELECTED );
 	ListView_SetSelectionMark( HexEditWnd, imoved );
 }
@@ -77,11 +77,11 @@ VOID GotoHexEdit( DWORD addr )
 
 
 /************************************************************************/
-/* »ã±àÒ»¸öµØÖ·
+/* æ±‡ç¼–ä¸€ä¸ªåœ°å€
 /************************************************************************/
 BOOL FsAsmWriteAddresss( PCH cmd, OUT PCH errtext )
 {
-	//»ñÈ¡µ±Ç°Ñ¡ÖĞµÄµØÖ·
+	//è·å–å½“å‰é€‰ä¸­çš„åœ°å€
 	char bufaddr[50] = {0};
 	if(os::ListView_GetSelectStr( ASMlistWnd, 0, bufaddr, 50 ) == 0)
 		return FALSE;
@@ -93,11 +93,11 @@ BOOL FsAsmWriteAddresss( PCH cmd, OUT PCH errtext )
 		Assemble( cmd, addr, &tasd, 0, 0, errtext );
 		debug( "Assemble [%08X]: %X %X %X (%d)   err:%s", addr, tasd.code[0], tasd.code[1], tasd.code[2], tasd.length, errtext );
 
-		//ĞŞ¸Ä»ã±àµ½ÄÇ¸öµØÖ·
+		//ä¿®æ”¹æ±‡ç¼–åˆ°é‚£ä¸ªåœ°å€
 		os::ctVirtualProtect( addr, tasd.length );
 		memcpy( (PVOID)addr, tasd.code, tasd.length );
 
-		//¹Ø±ÕºóË¢ĞÂÒ»ÏÂµ±Ç°µØÖ· 
+		//å…³é—­ååˆ·æ–°ä¸€ä¸‹å½“å‰åœ°å€ 
 		FsDisasm( bufaddr );
 		return TRUE;
 	}
@@ -107,8 +107,8 @@ BOOL FsAsmWriteAddresss( PCH cmd, OUT PCH errtext )
 
 
 /************************************************************************/
-/* ¶Ô·´»ã±àÊı¾İµÄ±£´æ Ê¹ÓÃµ¥ÏòÁ´±í
-±£´æËùÓĞµ±Ç°Ò³ÃæĞèÒªÏÔÊ¾µÄÊı¾İ
+/* å¯¹åæ±‡ç¼–æ•°æ®çš„ä¿å­˜ ä½¿ç”¨å•å‘é“¾è¡¨
+ä¿å­˜æ‰€æœ‰å½“å‰é¡µé¢éœ€è¦æ˜¾ç¤ºçš„æ•°æ®
 /************************************************************************/
 typedef struct _FsDisasmSaveStruct
 {
@@ -116,9 +116,9 @@ typedef struct _FsDisasmSaveStruct
 	int   len;
 	char  opcode[30];
 	char  bytes[15];
-	ulong jmpconst;		//ÌøÏòµÄµØÖ·  jmp xxx  call xxx
-	ulong adrconst;		//push xxxx   push [xxxx] º¬ÓĞÁ¢¼´ÊıµÄ
-	ulong immconst;		//mov eax,xxxx  Á¢¼´Êı
+	ulong jmpconst;		//è·³å‘çš„åœ°å€  jmp xxx  call xxx
+	ulong adrconst;		//push xxxx   push [xxxx] å«æœ‰ç«‹å³æ•°çš„
+	ulong immconst;		//mov eax,xxxx  ç«‹å³æ•°
 } FsDisasmSaveStruct, *PFsDisasmSaveStruct;
 
 FsDisasmSaveStruct fsDS[0x1500];
@@ -127,62 +127,62 @@ DWORD s_LastAsmEnd = 0;
 
 DWORD s_LastAsmAddr = 0;
 
-//´«Èëµ±Ç°ĞĞÀ´ĞŞ¸ÄÑÕÉ«
-//ĞĞ,ÁĞ
+//ä¼ å…¥å½“å‰è¡Œæ¥ä¿®æ”¹é¢œè‰²
+//è¡Œ,åˆ—
 VOID ChangeDisasmColor( int iline, int iSubItem, LPNMLVCUSTOMDRAW lplvcd )
 {
-	//¶Ïµã
+	//æ–­ç‚¹
 	if(bp::IsInCCRecord( fsDS[iline].addr ))
 	{
-		lplvcd->clrTextBk = RGB( 237, 28, 36 );//±³¾°ÑÕÉ«
+		lplvcd->clrTextBk = RGB( 237, 28, 36 );//èƒŒæ™¯é¢œè‰²
 		return;
 	}
 
 	if(iSubItem == 2)
 	{
-		//ÆäËû´úÂë
+		//å…¶ä»–ä»£ç 
 		if(strstr( fsDS[iline].opcode, "call" ))
 		{
-			lplvcd->clrText = RGB( 163, 51, 50 );//¸Ä±äÎÄ×ÖÑÕÉ« 
-												 //lplvcd->clrTextBk= RGB(0, 255, 255);//±³¾°ÑÕÉ«
+			lplvcd->clrText = RGB( 163, 51, 50 );//æ”¹å˜æ–‡å­—é¢œè‰² 
+												 //lplvcd->clrTextBk= RGB(0, 255, 255);//èƒŒæ™¯é¢œè‰²
 		}
 		else if(strstr( fsDS[iline].opcode, "jmp" ) || strstr( fsDS[iline].opcode, "ret" ))
 		{
-			lplvcd->clrText = RGB( 151, 125, 23 );//¸Ä±äÎÄ×ÖÑÕÉ« 
-												  //lplvcd->clrTextBk= RGB(0, 255, 255);//±³¾°ÑÕÉ«
+			lplvcd->clrText = RGB( 151, 125, 23 );//æ”¹å˜æ–‡å­—é¢œè‰² 
+												  //lplvcd->clrTextBk= RGB(0, 255, 255);//èƒŒæ™¯é¢œè‰²
 		}
 		else if(strstr( fsDS[iline].opcode, "je" ) || strstr( fsDS[iline].opcode, "jne" ) || strstr( fsDS[iline].opcode, "jz" )
 				 || strstr( fsDS[iline].opcode, "jnz" ) || strstr( fsDS[iline].opcode, "jle" ) || strstr( fsDS[iline].opcode, "jg" ) || strstr( fsDS[iline].opcode, "ja" )
 				 || strstr( fsDS[iline].opcode, "jl" ) || strstr( fsDS[iline].opcode, "jb" ))
 		{
-			lplvcd->clrText = RGB( 58, 120, 41 );//¸Ä±äÎÄ×ÖÑÕÉ« 
-												 //lplvcd->clrTextBk= RGB(0, 255, 255);//±³¾°ÑÕÉ«
+			lplvcd->clrText = RGB( 58, 120, 41 );//æ”¹å˜æ–‡å­—é¢œè‰² 
+												 //lplvcd->clrTextBk= RGB(0, 255, 255);//èƒŒæ™¯é¢œè‰²
 		}
 		else if(strstr( fsDS[iline].opcode, "push" ) || strstr( fsDS[iline].opcode, "pop" ))
 		{
-			lplvcd->clrText = RGB( 30, 64, 181 );//¸Ä±äÎÄ×ÖÑÕÉ« 
+			lplvcd->clrText = RGB( 30, 64, 181 );//æ”¹å˜æ–‡å­—é¢œè‰² 
 		}
 
 		return;
 	}
 
-	lplvcd->clrTextBk = RGB( 255, 251, 240 );		//±³¾°ÑÕÉ«
+	lplvcd->clrTextBk = RGB( 255, 251, 240 );		//èƒŒæ™¯é¢œè‰²
 }
 
-//½«ËùÓĞÊı¾İ·ÅÈëÁ´±íÖĞ
+//å°†æ‰€æœ‰æ•°æ®æ”¾å…¥é“¾è¡¨ä¸­
 BOOL FsDisasm( PCH bufaddr )
 {
 	debug( "FsDisasm : %s", bufaddr );
 
-	//ÉÏ´ÎµÄÏÔÊ¾Ä£Ê½²»ÊÇ·´»ã±àÔòÖØĞÂ³õÊ¼»¯Õâ¸ö
+	//ä¸Šæ¬¡çš„æ˜¾ç¤ºæ¨¡å¼ä¸æ˜¯åæ±‡ç¼–åˆ™é‡æ–°åˆå§‹åŒ–è¿™ä¸ª
 	if(iListShowType != ListType_ASM)
 	{
 		//////////////////////////////////////////////////////////////////////////
-		//°ÑÖ®Ç°µÄ¶¼É¾µô  É¾³ı10´ÎµÚÒ»ÁĞ ¾ÍÊÇ°ÑÁĞ¶¼É¾µô
+		//æŠŠä¹‹å‰çš„éƒ½åˆ æ‰  åˆ é™¤10æ¬¡ç¬¬ä¸€åˆ— å°±æ˜¯æŠŠåˆ—éƒ½åˆ æ‰
 		for(int i = 0; i<10; i++)
 			ListView_DeleteColumn( ASMlistWnd, 0 );
 
-		//°ÑListView³õÊ¼»¯
+		//æŠŠListViewåˆå§‹åŒ–
 		ListView_SetExtendedListViewStyleEx( ASMlistWnd, 0, LVS_EX_FULLROWSELECT );
 		LV_COLUMN colmn = {0};
 		colmn.mask = LVCF_WIDTH | LVCF_TEXT;
@@ -208,9 +208,9 @@ BOOL FsDisasm( PCH bufaddr )
 
 
 	//////////////////////////////////////////////////////////////////////////
-	//¿ªÊ¼·´»ã±à¡­¡­
+	//å¼€å§‹åæ±‡ç¼–â€¦â€¦
 	DWORD StartAddr = 0;
-	//ÏÈÅĞ¶ÏÊÇ·ñº¯ÊıÃû
+	//å…ˆåˆ¤æ–­æ˜¯å¦å‡½æ•°å
 	if((bufaddr[0] >= 'A' && bufaddr[0] <= 'Z') ||
 		(bufaddr[0] >= 'a' && bufaddr[0] <= 'z'))
 	{
@@ -223,21 +223,21 @@ BOOL FsDisasm( PCH bufaddr )
 
 	if(StartAddr == 0 || IsBadReadPtr( (PVOID)StartAddr, 1 ) == TRUE)
 	{
-		debug( "StartAddr ´íÎóµÄµØÖ· [%08X]", StartAddr );
+		debug( "StartAddr é”™è¯¯çš„åœ°å€ [%08X]", StartAddr );
 		return FALSE;
 	}
 
-	//ÉèÖÃ±êÌâÎªµ±Ç°µØÖ·ËùÔÚÄ£¿é
+	//è®¾ç½®æ ‡é¢˜ä¸ºå½“å‰åœ°å€æ‰€åœ¨æ¨¡å—
 	PCH modname = GetAddressModuleName( StartAddr );
 	char buf[200];
-	wsprintfA( buf, "FsDebug  - %s", modname );
+	wsprintfA( buf, "CTDBG  - %s", modname );
 	SetWindowTextA( MainWnd, buf );
 	debug( buf );
 
-	//±£´æÒ»ÏÂ×îºó»ã±àµÄµØÖ· 
+	//ä¿å­˜ä¸€ä¸‹æœ€åæ±‡ç¼–çš„åœ°å€ 
 	s_LastAsmAddr = StartAddr;
 
-	//´Ó¿ªÊ¼µØÖ·¿´ÍùÇ°ÄÜ²»ÄÜ×ß max-0x500
+	//ä»å¼€å§‹åœ°å€çœ‹å¾€å‰èƒ½ä¸èƒ½èµ° max-0x500
 	int backlen = 0;
 	for(int i = 0x100; i <= 0x500; i += 0x100)
 	{
@@ -247,26 +247,26 @@ BOOL FsDisasm( PCH bufaddr )
 			break;
 	}
 
-	//È·¶¨ÍùÇ°×ßºóµÄµØÖ·
+	//ç¡®å®šå¾€å‰èµ°åçš„åœ°å€
 	DWORD ori_StartAddr = StartAddr;
-	int   ori_countline = 0;		//ÔÚlistviewµÄÎïÀíµÚ¼¸ĞĞ ×îºóÔÙ¹ö¶¯¹ıÈ¥
-									//¼ÆËã³öĞÂµÄ¿ªÊ¼µØÖ·
+	int   ori_countline = 0;		//åœ¨listviewçš„ç‰©ç†ç¬¬å‡ è¡Œ æœ€åå†æ»šåŠ¨è¿‡å»
+									//è®¡ç®—å‡ºæ–°çš„å¼€å§‹åœ°å€
 	StartAddr -= backlen;
 
-	//ÏÈ¿´Òª·´»ã±àµÄµØÖ·ÊÇ·ñÔÚÖ®Ç°ÄÚ´æµØÖ·Àï
+	//å…ˆçœ‹è¦åæ±‡ç¼–çš„åœ°å€æ˜¯å¦åœ¨ä¹‹å‰å†…å­˜åœ°å€é‡Œ
 	if(StartAddr >= s_LastAsmStart && StartAddr <= s_LastAsmEnd)
 	{
-		//Ö±½ÓÉèÖÃÑ¡ÖĞ¾Í¿ÉÒÔÁË
+		//ç›´æ¥è®¾ç½®é€‰ä¸­å°±å¯ä»¥äº†
 		//...
 	}
 
-	//¿ªÊ¼ĞÂµÄ·´»ã±à
-	//Çå¿ÕÒ»ÏÂÄÚ´æ
+	//å¼€å§‹æ–°çš„åæ±‡ç¼–
+	//æ¸…ç©ºä¸€ä¸‹å†…å­˜
 	memset( fsDS, 0, sizeof( FsDisasmSaveStruct ) * 0x1500 );
-	//±£´æÖØĞÂ¼ÆËãµÄ¿ªÊ¼µØÖ·
+	//ä¿å­˜é‡æ–°è®¡ç®—çš„å¼€å§‹åœ°å€
 	s_LastAsmStart = StartAddr;
 
-	//¿ªÊ¼·´»ã±à
+	//å¼€å§‹åæ±‡ç¼–
 	PCHAR DisAsmAddrS1 = (PCH)StartAddr;
 	ulong asmlen = 0;
 	ulong srcip = StartAddr;
@@ -279,7 +279,7 @@ BOOL FsDisasm( PCH bufaddr )
 			ori_countline = i;
 
 		t_disasm _tasm = {0};
-		asmlen = Disasm( DisAsmAddrS1, 20, srcip, &_tasm, DISASM_CODE, 0 );		//µ÷ÓÃ·´»ã±àÒıÇæ
+		asmlen = Disasm( DisAsmAddrS1, 20, srcip, &_tasm, DISASM_CODE, 0 );		//è°ƒç”¨åæ±‡ç¼–å¼•æ“
 
 		fsDS[i].addr = srcip;
 		fsDS[i].len = asmlen;
@@ -289,22 +289,22 @@ BOOL FsDisasm( PCH bufaddr )
 		fsDS[i].adrconst = _tasm.adrconst;
 		fsDS[i].immconst = _tasm.immconst;
 
-		//±£´æ×îºó½áÊøµÄµØÖ·
+		//ä¿å­˜æœ€åç»“æŸçš„åœ°å€
 		s_LastAsmEnd = srcip;
 	}
 
 
-	//ÉèÖÃListÏÔÊ¾Ä£Ê½
+	//è®¾ç½®Listæ˜¾ç¤ºæ¨¡å¼
 	iListShowType = ListType_ASM;
 	debug( "FsDisasm END" );
 
 	//////////////////////////////////////////////////////////////////////////
-	//Ë¢ĞÂÒ»ÏÂ
+	//åˆ·æ–°ä¸€ä¸‹
 	ListView_SetItemCount( ASMlistWnd, 0x1500 );
-	//À­µ½Ö¸¶¨µÄÎ»ÖÃ
-	ListView_EnsureVisible( ASMlistWnd, ori_countline + 18, TRUE );		//ÏÈÍùºóÒÆ¶¯Ò»ÏÂ ±£³Ö²»ÈÃÕâĞĞÔÚ×îµ×²¿
+	//æ‹‰åˆ°æŒ‡å®šçš„ä½ç½®
+	ListView_EnsureVisible( ASMlistWnd, ori_countline + 18, TRUE );		//å…ˆå¾€åç§»åŠ¨ä¸€ä¸‹ ä¿æŒä¸è®©è¿™è¡Œåœ¨æœ€åº•éƒ¨
 	ListView_EnsureVisible( ASMlistWnd, ori_countline, TRUE );
-	//ÉèÖÃÑ¡ÖĞµ½Ìø×ªµ½µÄµØÖ·	
+	//è®¾ç½®é€‰ä¸­åˆ°è·³è½¬åˆ°çš„åœ°å€	
 	ListView_SetItemState( ASMlistWnd, ori_countline, LVIS_SELECTED, LVIS_SELECTED );
 	ListView_SetSelectionMark( ASMlistWnd, ori_countline );
 	//////////////////////////////////////////////////////////////////////////
@@ -312,7 +312,7 @@ BOOL FsDisasm( PCH bufaddr )
 	return TRUE;
 }
 
-//Ö±½ÓµØÖ··½Ê½
+//ç›´æ¥åœ°å€æ–¹å¼
 BOOL FsDisasm( DWORD addr )
 {
 	char bufaddr[100];
@@ -321,7 +321,7 @@ BOOL FsDisasm( DWORD addr )
 }
 
 
-//Ö±½ÓÊ¹ÓÃ×îºóÒ»´ÎµÄµØÖ·
+//ç›´æ¥ä½¿ç”¨æœ€åä¸€æ¬¡çš„åœ°å€
 BOOL FsDisasmLastAddr()
 {
 	char buf[50];
@@ -332,7 +332,7 @@ BOOL FsDisasmLastAddr()
 }
 
 /************************************************************************/
-/* Ìø×ªµ½Ñ¡ÖĞµÄÃüÁîĞĞÖĞµÄÌø×ªÖĞÈ¥
+/* è·³è½¬åˆ°é€‰ä¸­çš„å‘½ä»¤è¡Œä¸­çš„è·³è½¬ä¸­å»
 /************************************************************************/
 VOID ListJmpToChoiceAsmCode()
 {
@@ -347,15 +347,15 @@ VOID ListJmpToChoiceAsmCode()
 	if(os::ListView_GetSelectStr( ASMlistWnd, 1, bufbyte, 50 ) == 0)
 		return;
 
-	//¿ÉÒÔÍùÀïÌøÈëµÄ×Ö½ÚÂë
+	//å¯ä»¥å¾€é‡Œè·³å…¥çš„å­—èŠ‚ç 
 	//E8 E9  FF15    ( call  jmp   call [xxxxx] )
 	if((bufbyte[0] == 'E'  && bufbyte[1] == '8') ||
 		(bufbyte[0] == 'E'  && bufbyte[1] == '9'))
 	{
 		if(strstr( bufasm, "call" ))
-			FsDisasm( bufasm + 5 );		//call 123456   +5 ¾Íµ½ "123456"
+			FsDisasm( bufasm + 5 );		//call 123456   +5 å°±åˆ° "123456"
 		else if(strstr( bufasm, "jmp" ))
-			FsDisasm( bufasm + 4 );		//jmp 123456   +4 ¾Íµ½ "123456"
+			FsDisasm( bufasm + 4 );		//jmp 123456   +4 å°±åˆ° "123456"
 	}
 	else if(bufbyte[0] == 'F'  && bufbyte[1] == 'F' && (bufbyte[2] == '1' || bufbyte[2] == '2') && bufbyte[3] == '5')
 	{
@@ -377,13 +377,13 @@ VOID ListJmpToChoiceAsmCode()
 	}
 }
 /************************************************************************/
-/* ÔÚÖ¸¶¨µÄĞéÄâListViewÖĞÏÔÊ¾µ±Ç°µØÖ·µÄ·´»ã±à
+/* åœ¨æŒ‡å®šçš„è™šæ‹ŸListViewä¸­æ˜¾ç¤ºå½“å‰åœ°å€çš„åæ±‡ç¼–
 /************************************************************************/
-//Õâ¸ölistviewµ÷ÓÃ
+//è¿™ä¸ªlistviewè°ƒç”¨
 VOID ListView_GetDisasm( NMLVDISPINFO* plvdi )
 {
-	int list_iItem = plvdi->item.iItem;			//ĞĞ
-	int list_isub = plvdi->item.iSubItem;		//ĞĞµÄ×ÓÏî
+	int list_iItem = plvdi->item.iItem;			//è¡Œ
+	int list_isub = plvdi->item.iSubItem;		//è¡Œçš„å­é¡¹
 
 	if(fsDS[list_iItem].addr)
 	{
@@ -402,14 +402,14 @@ VOID ListView_GetDisasm( NMLVDISPINFO* plvdi )
 			case 3:
 				{
 					/*
-					//ÕâÀïÊÇ×¢ÊÍ Ğ´ÈëmodÃûfuncÃûµÈ   »¹ĞèÒªÔö¼ÓÒ»Ğ©ÆäËûµÄ  ±ÈÈç ´¦Àí´øÓĞÁ¢¼´Êı<adrconst> []µÄ´úÂë  ÀïÃæÊÇÊı¾İ»¹ÊÇstr ÏÔÊ¾³öÀ´
+					//è¿™é‡Œæ˜¯æ³¨é‡Š å†™å…¥modåfuncåç­‰   è¿˜éœ€è¦å¢åŠ ä¸€äº›å…¶ä»–çš„  æ¯”å¦‚ å¤„ç†å¸¦æœ‰ç«‹å³æ•°<adrconst> []çš„ä»£ç   é‡Œé¢æ˜¯æ•°æ®è¿˜æ˜¯str æ˜¾ç¤ºå‡ºæ¥
 					if( fsDS[list_iItem].immconst )			//mov eax,xxxx
 					{
 					if( strstr(fsDS[list_iItem].opcode,"[") == 0 )
 					{
 					if( IsBadReadPtr((PVOID)fsDS[list_iItem].immconst,4) == FALSE )
 					{
-					//ÅĞ¶ÏÊÇ·ñunicode
+					//åˆ¤æ–­æ˜¯å¦unicode
 					if( IsUnicodeStr((PBYTE)fsDS[list_iItem].immconst) )
 					{
 					int wlen = wcslen((PWCH)fsDS[list_iItem].immconst);
@@ -431,8 +431,8 @@ VOID ListView_GetDisasm( NMLVDISPINFO* plvdi )
 					}
 					else if( fsDS[list_iItem].adrconst )	//push xxxx
 					{
-					//´øÓĞÁ¢¼´ÊıµÄopcode
-					//ÕâÀïÔö¼ÓÅĞ¶Ï ´ø "["  "]"µÄ ´øµÄ»°¾ÍÈ¥¶ÁµØÖ·
+					//å¸¦æœ‰ç«‹å³æ•°çš„opcode
+					//è¿™é‡Œå¢åŠ åˆ¤æ–­ å¸¦ "["  "]"çš„ å¸¦çš„è¯å°±å»è¯»åœ°å€
 					if( strstr(fsDS[list_iItem].opcode,"[") )
 					{
 					if( IsBadReadPtr((PVOID)fsDS[list_iItem].adrconst,4)==FALSE )
@@ -453,7 +453,7 @@ VOID ListView_GetDisasm( NMLVDISPINFO* plvdi )
 					}
 					else if( fsDS[list_iItem].jmpconst )		//call xxx  jmp xxxx
 					{
-					//´øÓĞÌø×ªÁ¢¼´ÊıµÄopcode
+					//å¸¦æœ‰è·³è½¬ç«‹å³æ•°çš„opcode
 					wsprintfA(plvdi->item.pszText,"%s",GetFunctionName(fsDS[list_iItem].jmpconst));
 					}
 					*/
